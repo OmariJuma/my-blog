@@ -1,11 +1,25 @@
 const express = require("express");
-const app =  express();
-const PORT = 8080;
+// const { createHandler } = require("graphql-http/lib/use/express");
+const { graphqlHTTP } = require("express-graphql");
+const mongoose = require("mongoose");
+const schema = require("./schema/schema");
+const app = express();
+require("dotenv").config();
 
-app.get("/",(req,res)=>{
-    res.send("Hello World")
-})
+mongoose.connect(process.env.MONGODB)
+mongoose.connection.once("open", () => {
+  try{
+    console.log("Connected to database");
+  }
+catch(err){
+  console.log(err);
+}
+});
+app.use("/graphql", graphqlHTTP({
+     schema,
+     graphiql : true,
+    }));
 
-app.listen(PORT,()=>{
-    console.log("App running and listening on port ", PORT)
-})
+app.listen(8080, () => {
+  console.log("Server is running on port 8080");
+});
