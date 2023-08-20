@@ -1,10 +1,16 @@
-import './App.css'
+import "./App.css";
+import HomeFeed from "./components/HomeFeed";
+import NavigationBar from "./components/NavigationBar";
+import ThemeToggler from "./components/ThemeToggler";
 
 function App() {
-
   return (
-    <p>hi</p>
-  )
+    <>
+      {/* <ThemeToggler /> */}
+      <NavigationBar/>
+      <HomeFeed/>
+    </>
+  );
 }
 
-export default App
+export default App;
