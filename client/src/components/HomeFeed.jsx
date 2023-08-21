@@ -1,8 +1,19 @@
-import react from "react";
+import react, { useEffect } from "react";
 import "./../index.css";
 import "./../App.css";
-
+import { useQuery } from '@apollo/client';
+import { getAuthorsQuery } from "../Queries/queries";
+// import { graphql } from "graphql";
 const HomeFeed =()=>{
+
+//    useEffect(()=>{
+    const { loading, error, data } = useQuery( getAuthorsQuery)
+      console.log(error)
+      console.log(loading)
+      console.log(data)
+
+//    },[])
+
     return <>
     <main className="container">
   <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
