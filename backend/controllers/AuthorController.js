@@ -1,4 +1,3 @@
-const { findByIdAndDelete } = require("../models/article");
 const Author = require("../models/author");
 const createAuthor = async (req, res) => {
   try {
@@ -32,7 +31,18 @@ const createAuthor = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
+const getAuthor = async (req,res)=>{
+  try {
+    const {id} = req.params;
+    const author = await Author.findById({_id:id})
+    if(!author){
+      return res.status(400).json({message:"Author does not exist"})
+    }
+    res.status(200).json(author)
+  } catch (error) {
+    res.status(500).json({message: error.message})
+  }
+}
 const updateAuthor = async (req, res) => {
   try {
     const updateFields = {};
@@ -76,4 +86,4 @@ const deleteAuthor = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-module.exports = { createAuthor, updateAuthor, deleteAuthor };
+module.exports = { createAuthor, updateAuthor, deleteAuthor, getAuthor };
