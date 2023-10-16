@@ -3,12 +3,13 @@ const createAuthor = async (req, res) => {
   try {
     const { firstName, secondName, email, userRole } = req.body;
     if (
-      firstName.trim().length > 0 &&
-      secondName.trim().length > 0 &&
-      email.includes(["@", "."]) &&
-      userRole.trim().length > 0
+      firstName?.length > 0 &&
+      secondName?.length > 0 &&
+      email?.includes("@") &&
+      email?.includes(".") &&
+      userRole?.length > 0
     ) {
-      const findEmail = await Author.find({ email: email });
+      const findEmail = await Author.findOne({ email: email });
       if (findEmail) {
         return res.status(400).json({
           message: "Email already exists, please use a different one",
@@ -31,18 +32,29 @@ const createAuthor = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-const getAuthor = async (req,res)=>{
+const getAuthor = async (req, res) => {
   try {
-    const {id} = req.params;
-    const author = await Author.findById({_id:id})
-    if(!author){
-      return res.status(400).json({message:"Author does not exist"})
+    const { id } = req.params;
+    const author = await Author.findById({ _id: id });
+    if (!author) {
+      return res.status(400).json({ message: "Author does not exist" });
     }
-    res.status(200).json(author)
+    res.status(200).json(author);
   } catch (error) {
-    res.status(500).json({message: error.message})
+    res.status(500).json({ message: error.message });
   }
-}
+};
+const getAuthors = async (req, res) => {
+  try {
+    const authors = await Author.find({});
+    if (!authors) {
+      return res.status(400).json({ message: "Sorry, no authors found" });
+    }
+    res.status(200).json(authors);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 const updateAuthor = async (req, res) => {
   try {
     const updateFields = {};
@@ -51,8 +63,8 @@ const updateAuthor = async (req, res) => {
     if (firstName?.length > 0) {
       updateFields.firstName = firstName;
     }
-    if (lastName?.length > 0) {
-      updateFields.lastName = lastName;
+    if (secondName?.length > 0) {
+      updateFields.secondName = secondName;
     }
     if (email?.length > 0) {
       updateFields.email = email;
@@ -60,9 +72,9 @@ const updateAuthor = async (req, res) => {
     if (Object.keys(updateFields).length === 0) {
       return res.status(400).json({ message: "No fields to update" });
     }
-    const foundAuthor = await Author.findByOneAndUpdate(
+    const foundAuthor = await Author.findOneAndUpdate(
       { _id: id },
-      { updateFields },
+      updateFields ,
       { new: true }
     );
     if (!foundAuthor) {
@@ -77,7 +89,7 @@ const updateAuthor = async (req, res) => {
 const deleteAuthor = async (req, res) => {
   try {
     const { id } = req.params;
-    const author = await findByIdAndDelete({ _id: id });
+    const author = await Author.findByIdAndDelete({ _id: id });
     if (!author) {
       return res.status(400).json({ message: "Author not found" });
     }
@@ -86,4 +98,10 @@ const deleteAuthor = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-module.exports = { createAuthor, updateAuthor, deleteAuthor, getAuthor };
+module.exports = {
+  createAuthor,
+  updateAuthor,
+  deleteAuthor,
+  getAuthor,
+  getAuthors,
+};
