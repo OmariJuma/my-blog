@@ -10,8 +10,8 @@ const NavigationBar = () => {
       <div className="col-4 pt-1">
         <a className="link-secondary" href="#">Subscribe</a>
       </div>
-      <div className="col-4 text-center">
-        <a className="blog-header-logo text-body-emphasis text-decoration-none" href="#">Large</a>
+      <div className="col-4 text-center ">
+        <a className="blog-header-logo text-body-emphasis text-success" href="#">Ignito Paper</a>
       </div>
       <div className="col-4 d-flex justify-content-end align-items-center">
         <a className="link-secondary" href="#" aria-label="Search">

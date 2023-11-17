@@ -1,37 +1,37 @@
 import React, { useRef } from "react";
-import { Editor } from "@tinymce/tinymce-react";
+import ReactQuill from 'react-quill'; 
+import 'react-quill/dist/quill.snow.css';
+import axios from "axios";
+
 const CreateArticle = () => {
-  const editorRef = useRef(null);
-  const log = () => {
-    if (editorRef.current) {
-      console.log(editorRef.current.getContent());
+  const [text, setText] = React.useState('');
+  const handleChange = (value) => {
+    console.log(value); // Will be HTML string
+    setText(value);
+  }
+
+  const submitHandler = () => {
+    //using regex extract the h1 from the text and set it as the title
+    const title = text.match(/<h1>(.*)<\/h1>/)[1];
+    if(title){
+      axios.post("http://localhost:8080/api/v1/articles", {title, text, category, authorId:"Juma"})
+      .then(res =>{ 
+        console.log(res.data);
+      })
+      .catch(err => console.log(err));
     }
-  };
+
+  }
+  
   return (
-    <>
-      <Editor
-        apiKey="timfldbpcq8ycc5wwunrfcpsbhkjnucbwph70suq8cabd2oz"
-        init={{
-          plugins:
-            "ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss",
-          toolbar:
-            "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
-          tinycomments_mode: "embedded",
-          tinycomments_author: "Author name",
-          mergetags_list: [
-            { value: "First.Name", title: "First Name" },
-            { value: "Email", title: "Email" },
-          ],
-          ai_request: (request, respondWith) =>
-            respondWith.string(() =>
-              Promise.reject("See docs to implement AI Assistant")
-            ),
-        }}
-        initialValue="Welcome to TinyMCE!"
-      />{" "}
-      <button onClick={log}>Log editor content</button>
-    </>
-  );
+<div className="container">
+      <ReactQuill 
+        theme="snow"
+        value={text}
+        onChange={handleChange} 
+      />
+      <button className="btn btn-primary" onClick={submitHandler}>Submit Article</button>
+    </div>  );
 };
 
 export default CreateArticle;
